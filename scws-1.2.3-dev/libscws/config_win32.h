@@ -23,4 +23,6 @@
 
 #endif // Win32
 
+#define HAVE_SINGLE_ALNUM
+
 #endif

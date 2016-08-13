@@ -111,6 +111,7 @@ class QueryParser::Internal : public Xapian::Internal::RefCntBase {
 #endif
     Query parse_query(const string & query_string, unsigned int flags, const string & default_prefix);
 
+	Query parse_scws_query(const string & query_string, unsigned int flags, const string & default_prefix);
 };
 
 }

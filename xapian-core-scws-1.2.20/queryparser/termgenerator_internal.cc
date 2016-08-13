@@ -137,17 +137,19 @@ TermGenerator::Internal::load_scws(const char *fpath, bool xmem, int multi)
 	scws_set_ignore(scws, SCWS_NA);
 	scws_set_duality(scws, SCWS_YEA);
     }
+	/* 注释，完成一元拆分。
     // default dict & rule
     temp = string(fpath ? fpath : SCWS_ETCDIR) + string("/rules.utf8.ini");
     scws_set_rule(scws, temp.data());
     temp = string(fpath ? fpath : SCWS_ETCDIR) + string("/dict.utf8.xdb");
     scws_set_dict(scws, temp.data(), xmem == true ? SCWS_XDICT_MEM : SCWS_XDICT_XDB);
-    /* hightman.20111209: custom dict support */
+    // hightman.20111209: custom dict support
     temp = string(fpath ? fpath : SCWS_ETCDIR) + string("/dict_user.txt");
     scws_add_dict(scws, temp.data(), SCWS_XDICT_TXT);
     // multi options
     if (multi >= 0 && multi < 0x10)
-	scws_set_multi(scws, (multi<<12));
+	*/
+	scws_set_multi(scws, /*(multi<<12)*/SCWS_MULTI_ZALL);
 }
 #endif
 
@@ -174,6 +176,8 @@ TermGenerator::Internal::index_text(Utf8Iterator itor, termcount wdf_inc,
 	string term;
 
 	iterm.assign(text + cur->off, cur->len);
+
+	// 注释如下内容，不忽略标点符号
 	if (!Unicode::is_wordchar(*iterm)) {
 	    cur = cur->next;
 	    continue;

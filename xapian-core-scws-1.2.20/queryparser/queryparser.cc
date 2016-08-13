@@ -184,6 +184,13 @@ QueryParser::parse_query(const string &query_string, unsigned flags,
     return result;
 }
 
+Query
+QueryParser::parse_scws_query(const string &query_string, unsigned flags,
+	const string &default_prefix)
+{
+	return internal->parse_scws_query(query_string, flags, default_prefix);
+}
+
 void
 QueryParser::add_prefix(const string &field, const string &prefix)
 {

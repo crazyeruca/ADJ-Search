@@ -247,6 +247,17 @@ static void _scws_alnum_multi(scws_t s, int start, int wlen)
 
 	txt = s->txt;
 	pflag = 0;
+
+#ifdef HAVE_SINGLE_ALNUM
+	for (i = 0; i < wlen; i++)
+	{
+		ch = txt[start + i];
+		idf = SCWS_EN_IDF(ch);
+		SCWS_PUT_RES(start + i, idf, 1, attr_en);
+	}
+#endif // HAVE_SINGLE_ALNUM
+
+
 	for (i = j = k = 0; i < wlen; i++)
 	{
 		ch = txt[start + i];
@@ -444,7 +455,9 @@ static void _scws_ssegment(scws_t s, int end)
 			}
 			idf = SCWS_EN_IDF(wlen);
 			SCWS_PUT_RES(start-wlen, idf, wlen, attr_en);
+#ifndef HAVE_SINGLE_ALNUM
 			if ((s->mode & SCWS_MULTI_DUALITY) && (pflag & PFLAG_ADDSYM))
+#endif // HAVE_SINGLE_ALNUM
 				_scws_alnum_multi(s, start-wlen, wlen);
 		}
 		else if (!(s->mode & SCWS_IGN_SYMBOL))
@@ -1259,7 +1272,9 @@ scws_res_t scws_get_result(scws_t s)
 			SCWS_PUT_RES(s->off, idf, zlen, attr_en);
 		
 			/* hightman.090523: 为字母数字混合再度拆解, 纯数字, (>1 ? 纯字母 : 数字+字母) */
+#ifndef HAVE_SINGLE_ALNUM
 			if ((s->mode & SCWS_MULTI_DUALITY) && zlen > 2)
+#endif // !HAVE_SINGLE_ALNUM
 				_scws_alnum_multi(s, s->off, zlen);
 		}
 	}

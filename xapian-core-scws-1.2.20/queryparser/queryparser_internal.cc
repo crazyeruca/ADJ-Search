@@ -680,17 +680,19 @@ QueryParser::Internal::load_scws(const char *fpath, bool xmem, int multi)
 	scws_set_ignore(scws, SCWS_NA);
 	scws_set_duality(scws, SCWS_YEA);
     }
+	/* 注释，完成一元拆分。
     // default dict & rule
     temp = string(fpath ? fpath : SCWS_ETCDIR) + string("/rules.utf8.ini");
     scws_set_rule(scws, temp.data());
     temp = string(fpath ? fpath : SCWS_ETCDIR) + string("/dict.utf8.xdb");
     scws_set_dict(scws, temp.data(), xmem == true ? SCWS_XDICT_MEM : SCWS_XDICT_XDB);
-    /* hightman.20111209: custom dict support */
+    // hightman.20111209: custom dict support
     temp = string(fpath ? fpath : SCWS_ETCDIR) + string("/dict_user.txt");
     scws_add_dict(scws, temp.data(), SCWS_XDICT_TXT);
     // multi options
     if (multi >= 0 && multi < 0x10)
-	scws_set_multi(scws, (multi<<12));
+	*/
+	scws_set_multi(scws, /*(multi<<12)*/SCWS_MULTI_ZALL);
 }
 #endif	/* HAVE_SCWS */
 
@@ -1472,6 +1474,42 @@ done:
 
     errmsg = state.error;
     return state.query;
+}
+
+Xapian::Query Xapian::QueryParser::Internal::parse_scws_query( const string &query_string, unsigned flags,
+															   const string &default_prefix )
+{
+	stoplist.clear();
+	unstem.clear();
+	errmsg = NULL;
+
+	if (query_string.empty()) return Query();
+
+	std::vector<string> vecTerms;
+
+	/// Pre segmentation use scws
+	scws_res_t res, cur;
+
+	if (scws == NULL)
+		load_scws(NULL, false, 0);
+
+	const char *text = query_string.c_str();
+	scws_send_text(scws, text, strlen(text));
+
+	std::string dest;
+	while (res = cur = scws_get_result(scws))
+	{
+		while (cur != NULL)
+		{
+			dest = Unicode::tolower(std::string(text + cur->off, cur->len));
+			vecTerms.push_back(default_prefix.empty() ? dest : default_prefix + dest);
+			cur = cur->next;
+		}
+		scws_free_result(res);
+	}
+	
+	// 生成ADJ查询
+	return Query(Xapian::Query::OP_PHRASE, vecTerms.begin(), vecTerms.end());
 }
 
 struct ProbQuery {
