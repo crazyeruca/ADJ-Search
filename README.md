@@ -28,7 +28,7 @@ SCWS并不支持字母、数字或字母数字混合词组的分词，故在原�
 
 效果如下：
 
-<![alt](https://github.com/crazyeruca/ADJ-Search/blob/master/example.PNG)>
+![alt](https://github.com/crazyeruca/ADJ-Search/blob/master/example.PNG)
 
 ## Tips
 
