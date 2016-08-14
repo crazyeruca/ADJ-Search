@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "",
-	"build": "set NODE_ENV=production && webpack --progress --profile --colors --config webpack.dev.config.js",
+	  "build": "set NODE_ENV=production && webpack --progress --profile --colors --config webpack.dev.config.js",
     "dev": "webpack-dev-server --progress --profile --colors --hot --inline --config webpack.dev.config.js"
   },
   "author": "crazyeruca",
@@ -34,8 +34,8 @@
   },
   "dependencies": {
     "webpack": "^1.13.1",
-    "webpack-dev-server": "^1.14.1"，
-	"react-transform-catch-errors": "^1.0.2",
+    "webpack-dev-server": "^1.14.1",
+	  "react-transform-catch-errors": "^1.0.2",
     "react-transform-hmr": "^1.0.4",	
     "babel-plugin-react-transform": "^2.0.2",
     "babel-preset-react-hmre": "^1.1.1",
